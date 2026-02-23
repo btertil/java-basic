@@ -72,7 +72,6 @@ public class App {
         // concurrent processing with invokeAll: Submits a batch of tasks and waits for ALL of them to complete.
         System.out.println("\n--- Concurrent processing with ExecutorService (invokeAll) ---");
         // Create a thread pool with a fixed number of threads (e.g., 2)
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         List<Callable<String>> tasks = new ArrayList<>();
         for (String item : stringList2) {
@@ -84,7 +83,7 @@ public class App {
             });
         }
 
-        try {
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
             // Submit all tasks and wait for them to complete
             List<Future<String>> futures = executorService.invokeAll(tasks);
 
@@ -105,17 +104,11 @@ public class App {
             System.err.println("The main thread was interrupted.");
             // It's a good practice to re-interrupt the thread
             Thread.currentThread().interrupt();
-        } finally {
-            // It's crucial to shut down the executor service to release resources.
-            // shutdown() will allow currently running tasks to finish.
-            executorService.shutdown();
-            System.out.println("InvokeAll-ExecutorService shutdown initiated.");
         }
 
         // concurrent processing with submit: Submits tasks one by one and returns a Future immediately for each.
         System.out.println("\n--- Concurrent processing with ExecutorService (submit) ---");
-        ExecutorService submitExecutor = Executors.newFixedThreadPool(2);
-        try {
+        try (ExecutorService submitExecutor = Executors.newFixedThreadPool(2)) {
             List<Future<String>> submittedFutures = new ArrayList<>();
 
             System.out.println("Submitting individual tasks...");
@@ -150,9 +143,6 @@ public class App {
                     System.err.println("Task failed with an exception: " + e.getCause());
                 }
             }
-        } finally {
-            submitExecutor.shutdown();
-            System.out.println("Submit-ExecutorService shutdown initiated.");
         }
     }
 }
