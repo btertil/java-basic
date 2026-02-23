@@ -6,4 +6,10 @@ public class StringProcessor implements MyProcessor<String> {
         System.out.println(element);
         return element;
     }
+
+    @Override
+    public Tuple2<String, Integer> processAndCount(String element) {
+        System.out.println(element);
+        return Tuple2.of(element, element.length());
+    }
 }

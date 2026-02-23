@@ -34,7 +34,7 @@ public class App {
         strPrinter.print("abc");
 
         var stringProcessor = new StringProcessor();
-        int lengthOfProcessedString = stringProcessor.process("DDD").length();
+        int lengthOfProcessedString = stringProcessor.processAndCount("DDD").t2;
         System.out.println("The length of lengthOfProcessedString is: " + lengthOfProcessedString);
 
     }
