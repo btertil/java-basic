@@ -115,42 +115,44 @@ public class App {
         // concurrent processing with submit: Submits tasks one by one and returns a Future immediately for each.
         System.out.println("\n--- Concurrent processing with ExecutorService (submit) ---");
         ExecutorService submitExecutor = Executors.newFixedThreadPool(2);
-        List<Future<String>> submittedFutures = new ArrayList<>();
+        try {
+            List<Future<String>> submittedFutures = new ArrayList<>();
 
-        System.out.println("Submitting individual tasks...");
-        for (String item : stringList2) {
-            Callable<String> task = () -> {
-                System.out.println("Processing '" + item + "' in thread: " + Thread.currentThread().getName());
-                // Simulate work
-                Thread.sleep(100);
-                if ("trzy".equals(item)) {
-                    throw new IllegalArgumentException("Simulating failure for 'trzy'");
-                }
-                return item.toUpperCase();
-            };
-            // submit() is non-blocking and returns a Future immediately
-            Future<String> future = submitExecutor.submit(task);
-            submittedFutures.add(future);
-        }
-
-        System.out.println("All tasks submitted individually. The main thread can do other work here before getting results.");
-
-        System.out.println("Now, retrieving results from individual Futures...");
-        for (Future<String> future : submittedFutures) {
-            try {
-                // .get() is a blocking call. It waits for THIS specific task to finish.
-                String result = future.get();
-                System.out.println("Retrieved result: " + result);
-            } catch (InterruptedException e) {
-                System.err.println("The main thread was interrupted while waiting for a future.");
-                Thread.currentThread().interrupt();
-            } catch (ExecutionException e) {
-                // The exception thrown by our Callable is wrapped in an ExecutionException
-                System.err.println("Task failed with an exception: " + e.getCause());
+            System.out.println("Submitting individual tasks...");
+            for (String item : stringList2) {
+                Callable<String> task = () -> {
+                    System.out.println("Processing '" + item + "' in thread: " + Thread.currentThread().getName());
+                    // Simulate work
+                    Thread.sleep(100);
+                    if ("trzy".equals(item)) {
+                        throw new IllegalArgumentException("Simulating failure for 'trzy'");
+                    }
+                    return item.toUpperCase();
+                };
+                // submit() is non-blocking and returns a Future immediately
+                Future<String> future = submitExecutor.submit(task);
+                submittedFutures.add(future);
             }
-        }
 
-        submitExecutor.shutdown();
-        System.out.println("Submit-ExecutorService shutdown initiated.");
+            System.out.println("All tasks submitted individually. The main thread can do other work here before getting results.");
+
+            System.out.println("Now, retrieving results from individual Futures...");
+            for (Future<String> future : submittedFutures) {
+                try {
+                    // .get() is a blocking call. It waits for THIS specific task to finish.
+                    String result = future.get();
+                    System.out.println("Retrieved result: " + result);
+                } catch (InterruptedException e) {
+                    System.err.println("The main thread was interrupted while waiting for a future.");
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    // The exception thrown by our Callable is wrapped in an ExecutionException
+                    System.err.println("Task failed with an exception: " + e.getCause());
+                }
+            }
+        } finally {
+            submitExecutor.shutdown();
+            System.out.println("Submit-ExecutorService shutdown initiated.");
+        }
     }
 }
