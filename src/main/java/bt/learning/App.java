@@ -42,5 +42,11 @@ public class App {
 
         System.out.println(stringCountTuple.apply_2(element -> element * 8).t2);
 
+        var integerProcessor = new IntegerProcessor();
+        Tuple2<Integer, Integer> integerCountTuple = integerProcessor.processAndCount(12345);
+        System.out.println(integerCountTuple.t2);
+
+        System.out.println(integerProcessor.processAndCount(12345).apply_2(element -> element * 8).t2);
+
     }
 }
