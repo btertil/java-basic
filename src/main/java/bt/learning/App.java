@@ -34,8 +34,13 @@ public class App {
         strPrinter.print("abc");
 
         var stringProcessor = new StringProcessor();
-        int lengthOfProcessedString = stringProcessor.processAndCount("DDD").t2;
+        Tuple2<String, Integer> stringCountTuple = stringProcessor.processAndCount("DDD");
+        int lengthOfProcessedString = stringCountTuple.t2;
         System.out.println("The length of lengthOfProcessedString is: " + lengthOfProcessedString);
+
+        //stringCountTuple.apply_2(element -> element * 8);
+
+        System.out.println(stringCountTuple.apply_2(element -> element * 8).t2);
 
     }
 }
