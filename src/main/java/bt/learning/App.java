@@ -108,7 +108,7 @@ public class App {
 
         // concurrent processing with submit: Submits tasks one by one and returns a Future immediately for each.
         System.out.println("\n--- Concurrent processing with ExecutorService (submit) ---");
-        try (ExecutorService submitExecutor = Executors.newFixedThreadPool(2)) {
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
             List<Future<String>> submittedFutures = new ArrayList<>();
 
             System.out.println("Submitting individual tasks...");
@@ -123,7 +123,7 @@ public class App {
                     return item.toUpperCase();
                 };
                 // submit() is non-blocking and returns a Future immediately
-                Future<String> future = submitExecutor.submit(task);
+                Future<String> future = executorService.submit(task);
                 submittedFutures.add(future);
             }
 
